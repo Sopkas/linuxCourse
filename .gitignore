@@ -1,0 +1,21 @@
+# Claude Code settings
+.claude/
+
+# Node modules
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
