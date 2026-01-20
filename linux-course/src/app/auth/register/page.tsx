@@ -1,68 +1,9 @@
 'use client';
 
-import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, Layers, ShieldCheck } from "lucide-react";
-import { signIn } from "next-auth/react";
-
-import { Button } from "@/components/ui/button";
+import { AlertCircle, BadgeCheck, Layers, ShieldCheck } from "lucide-react";
 
 export default function RegisterPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const inputStyle =
-    "w-full rounded-lg border border-white/10 bg-slate-900/70 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition focus:border-amber-300 focus:ring-2 focus:ring-amber-300/40";
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    if (password !== confirmPassword) {
-      setError("Пароли не совпадают.");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        setError(data.error || "Не удалось зарегистрироваться. Проверьте данные.");
-        return;
-      }
-
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError("Вход сразу после регистрации не удался, попробуйте войти вручную.");
-        return;
-      }
-
-      window.location.href = "/course";
-    } catch (err) {
-      setError("Ошибка на сервере. Попробуйте еще раз или позже.");
-      console.error("Register error:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="relative isolate min-h-[calc(100vh-140px)] bg-slate-950 text-slate-50">
@@ -127,141 +68,45 @@ export default function RegisterPage() {
           <div className="relative">
             <div className="absolute -inset-4 bg-gradient-to-br from-cyan-300/10 via-transparent to-amber-300/10 blur-3xl" />
             <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/30 backdrop-blur">
-              <div className="mb-6">
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Регистрация</p>
-                <h2 className="font-display text-2xl text-white">Заполните данные, чтобы начать</h2>
-                <p className="text-sm text-slate-300">
-                  Уже есть аккаунт?{" "}
-                  <Link href="/auth/login" className="text-amber-200 hover:text-amber-100">
-                    Войти
-                  </Link>
-                </p>
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Регистрация</p>
+                  <h2 className="font-display text-2xl text-white">Регистрация временно недоступна</h2>
+                </div>
+                <AlertCircle className="h-6 w-6 text-amber-300" />
               </div>
 
-              {error && (
-                <div className="mb-4 rounded-lg border border-red-300/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">
-                  {error}
-                </div>
-              )}
-
-              <form className="space-y-4" onSubmit={handleSubmit}>
-                <div className="space-y-2">
-                  <label htmlFor="name" className="text-sm text-slate-200">
-                    Имя
-                  </label>
-                  <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    autoComplete="name"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className={inputStyle}
-                    placeholder="DevOps инженер"
-                  />
+              <div className="space-y-6">
+                <div className="rounded-xl border border-amber-300/40 bg-amber-500/10 p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-full bg-amber-300/20 p-3 ring-2 ring-amber-200/40">
+                      <AlertCircle className="h-6 w-6 text-amber-200" />
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <h3 className="text-lg font-semibold text-amber-100">
+                        Извините, сервис временно приостановил свою работу
+                      </h3>
+                      <p className="text-sm leading-relaxed text-slate-200/80">
+                        В данный момент проводятся технические работы. Авторизация и регистрация временно недоступны.
+                      </p>
+                      <p className="text-sm text-slate-300/70">
+                        Мы работаем над улучшением сервиса и скоро вернёмся. Спасибо за понимание!
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm text-slate-200">
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={inputStyle}
-                    placeholder="ops@example.com"
-                  />
+                <div className="rounded-xl border border-white/10 bg-black/40 p-6 text-center">
+                  <p className="text-sm text-slate-300">
+                    Вы можете вернуться на главную страницу
+                  </p>
+                  <Link
+                    href="/"
+                    className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-amber-200 transition hover:border-amber-200/50 hover:bg-white/10"
+                  >
+                    На главную
+                  </Link>
                 </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="password" className="text-sm text-slate-200">
-                    Пароль
-                  </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={inputStyle}
-                    placeholder="••••••••"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label htmlFor="confirm-password" className="text-sm text-slate-200">
-                    Подтверждение пароля
-                  </label>
-                  <input
-                    id="confirm-password"
-                    name="confirm-password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={inputStyle}
-                    placeholder="••••••••"
-                  />
-                </div>
-
-                <label className="flex items-start gap-3 text-sm text-slate-300">
-                  <input
-                    id="terms"
-                    name="terms"
-                    type="checkbox"
-                    required
-                    className="mt-1 h-4 w-4 rounded border-white/20 bg-slate-900/60 text-amber-200 focus:ring-amber-300"
-                  />
-                  <span>
-                    Я согласен с{" "}
-                    <Link href="/terms" className="text-amber-200 hover:text-amber-100">
-                      условиями использования
-                    </Link>{" "}
-                    и{" "}
-                    <Link href="/privacy" className="text-amber-200 hover:text-amber-100">
-                      политикой приватности
-                    </Link>
-                    .
-                  </span>
-                </label>
-
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="group w-full bg-amber-300 text-slate-900 hover:bg-amber-200"
-                >
-                  {isLoading ? "Создаём доступ..." : "Создать аккаунт"}
-                  <ArrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
-                </Button>
-              </form>
-
-              <div className="mt-6 rounded-xl border border-white/10 bg-black/40 p-4 text-sm text-slate-200/80">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-slate-400">
-                  Что получите
-                </div>
-                <ul className="mt-2 space-y-2 text-sm">
-                  <li className="flex gap-2">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-amber-300" />
-                    Доступ к модулям и чек-листам прогресса.
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-amber-300" />
-                    Практики с journalctl, systemd, ssh, firewall, бэкапы.
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="mt-1 h-2 w-2 rounded-full bg-amber-300" />
-                    Сертификат для резюме и LinkedIn.
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
