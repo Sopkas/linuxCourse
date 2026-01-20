@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  // Performance optimizations
+  experimental: {
+    // Use optimized package imports for faster builds
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-avatar', '@radix-ui/react-dialog', '@radix-ui/react-progress', '@radix-ui/react-tabs'],
+  },
+
+  // Disable source maps in development for faster builds
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;
